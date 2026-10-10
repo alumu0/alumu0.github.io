@@ -1,0 +1,815 @@
+<!DOCTYPE html><html lang="fi" style=""><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CampusKeikka - Mobiilisovellus</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Outfit:wght@600;700&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="app-frame">
+    <!-- Top Navigation / Logo -->
+    <header class="top-header">
+      <div class="brand">
+        <div class="brand-logo">CK</div>
+        <div>
+          <span class="brand-name">CampusKeikka</span>
+          <span class="brand-badge">Opiskelija</span>
+        </div>
+      </div>
+      <button class="header-action" onclick="showToast('Sinulla ei ole uusia ilmoituksia.')" title="Ilmoitukset" aria-label="Ilmoitukset">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+        </svg>
+        <span class="dot"></span>
+      </button>
+    </header>
+
+    <!-- Toast Notification Banner -->
+    <div id="toast" class="toast">
+      <svg width="20" height="20" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+      </svg>
+      <span id="toast-text" class="">Kuittaus</span>
+    </div>
+
+    <!-- Main Viewport for Pages -->
+    <main class="viewport">
+
+      <!-- ============================================== -->
+      <!-- 1. NÄKYMÄ: ETUSIVU (#view-home) -->
+      <!-- ============================================== -->
+      <section id="view-home" class="page active">
+        <div>
+          <h1 class="">Hei Alex! 👋</h1>
+          <p class="text-muted">Löydä päivän parhaat keikat kampukseltasi ja lähialueelta.</p>
+        </div>
+
+        <!-- Haku -->
+        <div class="search-box">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="gig-search-input" placeholder="Hae tehtävää tai yritystä..." onkeyup="filterGigsBySearch(this.value)">
+        </div>
+
+        <!-- Suodatintagit -->
+        <div class="filter-tags-scroll">
+          <button class="filter-chip active" onclick="setFilter(this, 'Kaikki')">Kaikki</button>
+          <button class="filter-chip" onclick="setFilter(this, 'Viikonloppu')">Viikonloppu</button>
+          <button class="filter-chip" onclick="setFilter(this, 'Pikakeikat')">Pikakeikat</button>
+          <button class="filter-chip" onclick="setFilter(this, 'Yli 20€/h')">Yli 20€/h</button>
+          <button class="filter-chip" onclick="setFilter(this, 'IT &amp; Koodi')">IT &amp; Koodi</button>
+          <button class="filter-chip" onclick="setFilter(this, 'Tapahtumat')">Tapahtumat</button>
+        </div>
+      
+        <h2 class="section-title">Avoimet keikat</h2>
+        <!-- Keikkalistaus -->
+        <div id="gigs-list">
+          <!-- Gig 1 -->
+          <article class="card gig-card" onclick="openGigDetails(1)" data-title="Tapahtuma-avustaja Slush-esitilaisuuteen" data-tags="Tapahtumat Pikakeikat Yli 20€/h">
+            <div class="gig-card-header">
+              <div class="company-logo logo-red">NX</div>
+              <div class="gig-info">
+                <h3 class="gig-title">Tapahtuma-avustaja Slush-esitilaisuuteen</h3>
+                <span class="company-name">Nordic Expo Oy • Pasila</span>
+              </div>
+              <span class="gig-pay-badge">22 €/h</span>
+            </div>
+            <div class="gig-meta-row">
+              <div class="gig-meta-item">
+                <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                <span class="">5 h (Pikakeikka)</span>
+              </div>
+              <div class="gig-meta-item">
+                <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                <span class="">Haaga-Helia Kampus, Pasila</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Gig 2 -->
+          <article class="card gig-card" onclick="openGigDetails(2)" data-title="Frontend-bugin korjaus React/CSS" data-tags="IT &amp; Koodi Yli 20€/h">
+            <div class="gig-card-header">
+              <div class="company-logo logo-blue">FS</div>
+              <div class="gig-info">
+                <h3 class="gig-title">Frontend-bugin korjaus React/CSS</h3>
+                <span class="company-name">FlowStack Software • Etätyö</span>
+              </div>
+              <span class="gig-pay-badge">25 €/h</span>
+            </div>
+            <div class="gig-meta-row">
+              <div class="gig-meta-item">
+                <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                <span class="">8 h (Joustava aikataulu)</span>
+              </div>
+              <div class="gig-meta-item">
+                <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                <span class="">Etätyö / Helsinki</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Gig 3 -->
+          <article class="card gig-card" onclick="openGigDetails(3)" data-title="Asiakaspalvelija opiskelijakahvilaan" data-tags="Viikonloppu">
+            <div class="gig-card-header">
+              <div class="company-logo logo-green">KC</div>
+              <div class="gig-info">
+                <h3 class="gig-title">Asiakaspalvelija opiskelijakahvilaan</h3>
+                <span class="company-name">KulmaCafe • Vallila</span>
+              </div>
+              <span class="gig-pay-badge">16,50 €/h</span>
+            </div>
+            <div class="gig-meta-row">
+              <div class="gig-meta-item">
+                <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                <span class="">6 h (Lauantai)</span>
+              </div>
+              <div class="gig-meta-item">
+                <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                <span class="">Vallila Campus Hub</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Gig 4 -->
+          <article class="card gig-card" onclick="openGigDetails(4)" data-title="Promootiomyyjä viikonlopun messuille" data-tags="Viikonloppu Tapahtumat Yli 20€/h">
+            <div class="gig-card-header">
+              <div class="company-logo logo-purple">BS</div>
+              <div class="gig-info">
+                <h3 class="gig-title">Promootiomyyjä viikonlopun messuille</h3>
+                <span class="company-name">BrandStars Agency • Messukeskus</span>
+              </div>
+              <span class="gig-pay-badge">21 €/h</span>
+            </div>
+            <div class="gig-meta-row">
+              <div class="gig-meta-item">
+                <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                <span class="">7 h / La-Su</span>
+              </div>
+              <div class="gig-meta-item">
+                <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                <span class="">Messukeskus, Helsinki</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- 2. NÄKYMÄ: OSAAMISPROFIILI & AIKATAULUT (#view-profile) -->
+      <!-- ============================================== -->
+      <section id="view-profile" class="page">
+        <!-- Profiilikuva & opiskelijan tiedot -->
+        <div class="profile-hero">
+          <div class="avatar-wrapper">
+            <div class="avatar">AM</div>
+            <div class="avatar-status"></div>
+          </div>
+          <div class="profile-details">
+            <h2 class="">Alex Mäkinen</h2>
+            <p class="text-muted">Tietojenkäsittely (BBA)</p>
+            <span class="profile-badge">🎓 Haaga-Helia opiskelija</span>
+          </div>
+        </div>
+
+        <!-- Taito-tagit & lisäys -->
+        <div class="card">
+          <h3 class="">Osaaminen ja taidot</h3>
+          <p class="text-caption" style="margin-bottom: 10px;">Lisää taitoja, joita työnantajat voivat etsiä.</p>
+          
+          <div id="skills-list" class="tags-container">
+            <span class="skill-tag">Asiakaspalvelu <span class="remove-btn" onclick="removeSkill(this)">×</span></span>
+            <span class="skill-tag">Python <span class="remove-btn" onclick="removeSkill(this)">×</span></span>
+            <span class="skill-tag">Tapahtuma-apu <span class="remove-btn" onclick="removeSkill(this)">×</span></span>
+            <span class="skill-tag">Englanti (sujuva) <span class="remove-btn" onclick="removeSkill(this)">×</span></span>
+          </div>
+
+          <div class="add-skill-form">
+            <input type="text" id="new-skill-input" placeholder="Esim. Excel, Myynti, Figma...">
+            <button class="btn btn-secondary btn-sm" onclick="addNewSkill()">+ Lisää taito</button>
+          </div>
+        </div>
+
+        <!-- Interaktiivinen viikkokalenteri -->
+        <div class="card">
+          <h3 class="">Oma saatavuus (Viikko 42)</h3>
+          <p class="text-caption">Klikkaa päiviä, jolloin olet vapaa ottamaan keikkoja vastaan.</p>
+
+          <div class="calendar-grid">
+            <div class="calendar-day-header">Ma</div>
+            <div class="calendar-day-header">Ti</div>
+            <div class="calendar-day-header">Ke</div>
+            <div class="calendar-day-header">To</div>
+            <div class="calendar-day-header">Pe</div>
+            <div class="calendar-day-header">La</div>
+            <div class="calendar-day-header">Su</div>
+
+            <div class="calendar-slot available" onclick="toggleCalendarSlot(this)">14<br><small>Vapaa</small></div>
+            <div class="calendar-slot" onclick="toggleCalendarSlot(this)">15<br><small>Koulu</small></div>
+            <div class="calendar-slot available" onclick="toggleCalendarSlot(this)">16<br><small>Vapaa</small></div>
+            <div class="calendar-slot" onclick="toggleCalendarSlot(this)">17<br><small>Koulu</small></div>
+            <div class="calendar-slot available" onclick="toggleCalendarSlot(this)">18<br><small>Vapaa</small></div>
+            <div class="calendar-slot available" onclick="toggleCalendarSlot(this)">19<br><small>Vapaa</small></div>
+            <div class="calendar-slot" onclick="toggleCalendarSlot(this)">20<br><small>Muu</small></div>
+          </div>
+
+          <div class="calendar-legend">
+            <div class=""><span class="legend-indicator" style="background-color: var(--color-secondary);"></span> Vapaa keikkailemaan</div>
+            <div class=""><span class="legend-indicator" style="background-color: #E9ECEF;"></span> Ei saatavilla</div>
+          </div>
+        </div>
+
+        <!-- Tallenna profiili painike -->
+        <div class="card" id="employer-reviews-card" style="margin-top: 2px;">
+  <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+    <div>
+      <h3 class="">Työnantajien arviot ja palautteet</h3>
+      <p class="text-caption">Vahvistettujen toimeksiantajien antamat arvostelut.</p>
+    </div>
+    <span style="background: #FEF3C7; color: #B45309; font-weight: 700; font-size: 11px; padding: 3px 8px; border-radius: 9999px; display: inline-flex; align-items: center; gap: 4px;" class="">
+      ✓ Vahvistettu tekijä
+    </span>
+  </div>
+
+  <!-- Yleisarvosana yhteenveto -->
+  <div style="background: linear-gradient(135deg, #F8FAF9 0%, #EFF8F3 100%); border: 1px solid #D8F3DC; border-radius: 10px; padding: 14px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between;">
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <div style="font-family: var(--font-heading); font-size: 32px; font-weight: 700; color: var(--color-primary); line-height: 1;" class="">
+        4.9
+      </div>
+      <div>
+        <div style="color: #F59E0B; font-size: 16px; letter-spacing: 2px; line-height: 1.2;" class="">★★★★★</div>
+        <div class="text-caption" style="color: var(--color-text-muted); font-size: 12px; margin-top: 2px;">12 keikka-arvostelua</div>
+      </div>
+    </div>
+    <div style="text-align: right;">
+      <span style="display: inline-block; background: var(--color-success-bg); color: #081C15; font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 9999px; margin-bottom: 2px;" class="">100% suosittelee</span>
+      <div style="font-size: 11px; color: var(--color-text-muted);" class="">★ Täsmällinen &amp; luotettava</div>
+    </div>
+  </div>
+
+  <!-- Palautelista -->
+  <div style="display: flex; flex-direction: column; gap: 12px;">
+    <!-- Arvostelu 1 -->
+    <div style="border-bottom: 1px dashed var(--color-border); padding-bottom: 12px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <span style="font-weight: 600; font-size: 13px; color: var(--color-text);" class="">Nordic Expo Oy</span>
+          <span style="color: var(--color-text-muted); font-size: 11px;" class="">• 3 pv sitten</span>
+        </div>
+        <span style="color: #F59E0B; font-size: 12px; letter-spacing: 1px;" class="">★★★★★</span>
+      </div>
+      <div style="font-size: 11px; color: var(--color-secondary); font-weight: 500; margin-bottom: 4px;" class="">Keikka: Tapahtuma-avustaja Slush-esitilaisuuteen</div>
+      <p style="font-size: 13px; color: var(--color-text); line-height: 1.45;" class="">
+        “Alex hoiti ständin pystytyksen ja asiakkaiden opastuksen esimerkillisesti! Oma-aloitteinen asenne ja erinomainen tilannetaju.”
+      </p>
+    </div>
+
+    <!-- Arvostelu 2 -->
+    <div style="border-bottom: 1px dashed var(--color-border); padding-bottom: 12px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <span style="font-weight: 600; font-size: 13px; color: var(--color-text);" class="">FlowStack Software</span>
+          <span style="color: var(--color-text-muted); font-size: 11px;" class="">• 2 vkoa sitten</span>
+        </div>
+        <span style="color: #F59E0B; font-size: 12px; letter-spacing: 1px;" class="">★★★★★</span>
+      </div>
+      <div style="font-size: 11px; color: var(--color-secondary); font-weight: 500; margin-bottom: 4px;" class="">Keikka: Frontend-bugin korjaus React/CSS</div>
+      <p style="font-size: 13px; color: var(--color-text); line-height: 1.45;" class="">
+        “Tarkkaa ja itsenäistä työtä frontend-bugin parissa, erinomaista kommunikointia ja nopea toimitus. Vahva suositus!”
+      </p>
+    </div>
+
+    <!-- Arvostelu 3 -->
+    <div>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <span style="font-weight: 600; font-size: 13px; color: var(--color-text);" class="">KulmaCafe</span>
+          <span style="color: var(--color-text-muted); font-size: 11px;" class="">• 3 vkoa sitten</span>
+        </div>
+        <span style="color: #F59E0B; font-size: 12px; letter-spacing: 1px;" class="">★★★★★</span>
+      </div>
+      <div style="font-size: 11px; color: var(--color-secondary); font-weight: 500; margin-bottom: 4px;" class="">Keikka: Kahvilatuuraus lauantaina</div>
+      <p style="font-size: 13px; color: var(--color-text); line-height: 1.45;" class="">
+        “Ystävällinen asiakaspalveluasenne ja erittäin nopea oppimaan kassajärjestelmän. Otamme mielellään uudelleen vuoroon!”
+      </p>
+    </div>
+  </div>
+</div><button class="btn btn-primary" onclick="saveProfile()" style="margin-top: 6px;">
+          Tallenna profiili
+        </button>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- 3. NÄKYMÄ: KEIKAN YKSITYISKOHDAT (#view-details) -->
+      <!-- ============================================== -->
+      <section id="view-details" class="page">
+        <div class="nav-back-bar">
+          <button class="back-btn" onclick="navigateTo('view-home')" title="Takaisin etusivulle" aria-label="Takaisin etusivulle">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+          </button>
+          <span style="font-weight: 600; font-size: 16px;" class="">Keikan tiedot</span>
+        </div>
+
+        <div class="details-hero">
+          <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 12px;">
+            <div id="details-company-logo" class="company-logo logo-red">NX</div>
+            <div>
+              <span id="details-company-name" style="font-weight: 600; color: var(--color-text);" class="">Nordic Expo Oy</span>
+              <p class="text-caption" id="details-company-desc">Tapahtumatuotannon edelläkävijä Suomessa.</p>
+            </div>
+          </div>
+
+          <h2 id="details-title" style="margin-bottom: 8px;" class="">Tapahtuma-avustaja Slush-esitilaisuuteen</h2>
+          
+          <div class="details-meta-grid">
+            <div class="meta-box">
+              <div class="label">Palkkio</div>
+              <div class="val" id="details-pay">22 € / h</div>
+            </div>
+            <div class="meta-box">
+              <div class="label">Arvioitu kesto</div>
+              <div class="val" id="details-duration">5 tuntia</div>
+            </div>
+            <div class="meta-box">
+              <div class="label">Sijainti</div>
+              <div class="val" id="details-location" style="font-size: 13px;">Haaga-Helia Pasila</div>
+            </div>
+            <div class="meta-box">
+              <div class="label">Ajankohta</div>
+              <div class="val" id="details-date" style="font-size: 13px;">Perjantai klo 14-19</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="">Tehtävän kuvaus</h3>
+          <p id="details-desc" style="margin-top: 8px; font-size: 14px; line-height: 1.6; color: var(--color-text);" class="">
+            Etsimme reipasta ja oma-aloitteista opiskelijaa avustamaan Slush-viikon esiseminaarissa. 
+            Tehtäviin kuuluu vieraiden vastaanotto, nimikorttien jako, puhujien opastaminen lavan taakse ja yleinen tilajärjestely.
+            Perehdytys pidetään heti työvuoron alussa.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3 class="">Mitä odotamme sinulta?</h3>
+          <ul style="padding-left: 20px; font-size: 14px; color: var(--color-text); margin-top: 8px; line-height: 1.6;">
+            <li class="">Iloista asiakaspalveluasennetta</li>
+            <li class="">Sujuvaa suomen ja englannin kielen taitoa</li>
+            <li class="">Täsmällisyyttä ja siistiä pukeutumista</li>
+          </ul>
+        </div>
+
+        <!-- Oranssi CTA-painike -->
+        <button class="btn btn-accent" id="apply-btn" onclick="applyForGig()">
+          🚀 Hae keikkaa nyt
+        </button>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- 4. NÄKYMÄ: OMAT KEIKAT (#view-my-gigs) -->
+      <!-- ============================================== -->
+      <section id="view-my-gigs" class="page">
+        <!-- Yhteenvetokortti -->
+        <div class="summary-card">
+          <div>
+            <div class="label">Tässä kuussa ansaitut</div>
+            <div class="amount" id="earned-amount">320 €</div>
+            <div class="text-caption" style="color: #D8F3DC; margin-top: 4px;">+85 € odottaa vahvistusta</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.15); width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+            <svg width="24" height="24" fill="none" stroke="#FFFFFF" stroke-width="2" viewBox="0 0 24 24">
+              <line x1="12" y1="1" x2="12" y2="23"></line>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Välilehdet -->
+        <div class="tab-bar">
+          <button class="tab-item active" onclick="switchMyGigsTab(this, 'tab-upcoming')">Tulevat</button>
+          <button class="tab-item" onclick="switchMyGigsTab(this, 'tab-pending')">Odottaa (1)</button>
+          <button class="tab-item" onclick="switchMyGigsTab(this, 'tab-completed')">Tehdyt (3)</button>
+        </div>
+
+        <!-- Tab 1: Tulevat keikat -->
+        <div id="tab-upcoming" class="tab-content">
+          <div class="card" id="upcoming-card-1">
+            <div class="gig-card-header">
+              <div class="company-logo logo-red">NX</div>
+              <div class="gig-info">
+                <h3 class="gig-title" id="my-gig-title-1">Tapahtuma-avustaja Slush-esitilaisuuteen</h3>
+                <span class="company-name">Nordic Expo Oy • Pe 18.10. klo 14:00</span>
+              </div>
+              <span class="gig-pay-badge">110 €</span>
+            </div>
+            <div class="gig-actions-row">
+              <button class="btn btn-secondary btn-sm" onclick="openChatModal('Nordic Expo Oy - Yhteyshenkilö Sari')">
+                💬 Viesti työnantajalle
+              </button>
+              <button class="btn btn-primary btn-sm" onclick="markAsCompleted('upcoming-card-1', 110)">
+                ✓ Merkitse tehdyksi
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Odottaa vahvistusta -->
+        <div id="tab-pending" class="tab-content" style="display: none;">
+          <div class="card">
+            <div class="gig-card-header">
+              <div class="company-logo logo-blue">FS</div>
+              <div class="gig-info">
+                <h3 class="gig-title">Frontend-bugin korjaus React/CSS</h3>
+                <span class="company-name">FlowStack Software • Hakemus jätetty</span>
+              </div>
+              <span style="font-size: 13px; color: var(--color-accent); font-weight: 600;" class="">Odottaa</span>
+            </div>
+            <div class="gig-actions-row">
+              <button class="btn btn-secondary btn-sm" onclick="openChatModal('FlowStack Rekrytointi')">
+                💬 Kysy hakemuksen tilasta
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 3: Tehdyt keikat -->
+        <div id="tab-completed" class="tab-content" style="display: none;">
+          <div class="card">
+            <div class="gig-card-header">
+              <div class="company-logo logo-green">KC</div>
+              <div class="gig-info">
+                <h3 class="gig-title">Kahvilatuuraus lauantaina</h3>
+                <span class="company-name">KulmaCafe • Suoritettu 05.10.</span>
+              </div>
+              <span class="gig-pay-badge" style="background:#E9ECEF; color: #1B4332;">Maksettu 120 €</span>
+            </div>
+          </div>
+          <div class="card">
+            <div class="gig-card-header">
+              <div class="company-logo logo-purple">HH</div>
+              <div class="gig-info">
+                <h3 class="gig-title">Fuksitapahtuman järjestelyapu</h3>
+                <span class="company-name">Haaga-Helia opiskelijakunta • Suoritettu 28.09.</span>
+              </div>
+              <span class="gig-pay-badge" style="background:#E9ECEF; color: #1B4332;">Maksettu 200 €</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ALANAVIGAATIO (Bottom Navigation Bar) -->
+    <nav class="bottom-nav">
+      <button class="nav-btn active" id="nav-btn-home" onclick="navigateTo('view-home')">
+        <svg viewBox="0 0 24 24">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+        <span class="">Etusivu</span>
+      </button>
+
+      <button class="nav-btn" id="nav-btn-my-gigs" onclick="navigateTo('view-my-gigs')">
+        <svg viewBox="0 0 24 24">
+          <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+          <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+        </svg>
+        <span class="">Omat keikat</span>
+      </button>
+
+      <button class="nav-btn" id="nav-btn-profile" onclick="navigateTo('view-profile')">
+        <svg viewBox="0 0 24 24">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <span class="">Profiili</span>
+      </button>
+    </nav>
+
+    <!-- Modal: Viesti Työnantajalle (Chat modal) -->
+    <div id="chat-modal" class="modal-backdrop" onclick="handleBackdropClick(event)">
+      <div class="modal-sheet">
+        <div class="modal-header">
+          <div>
+            <h3 id="modal-recipient" style="font-size: 16px;" class="">Viesti työnantajalle</h3>
+            <span class="text-caption">Vastausaika yleensä alle 1 tunti</span>
+          </div>
+          <button class="close-modal-btn" onclick="closeChatModal()">×</button>
+        </div>
+
+        <div class="chat-messages" id="chat-stream">
+          <div class="chat-bubble them">Hei Alex! Tervetuloa tiimiin perjantaina. Ilmoittaudu pääovella klo 13:45.</div>
+          <div class="chat-bubble me">Moikka! Kiitos tiedosta, olen ajoissa paikalla!</div>
+        </div>
+
+        <div class="chat-input-row">
+          <input type="text" id="chat-input" placeholder="Kirjoita viesti..." onkeypress="if(event.key==='Enter') sendChatMessage()">
+          <button class="btn btn-primary btn-sm" onclick="sendChatMessage()" style="width: auto;">Lähetä</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- JavaScript Logiikka -->
+  <script>
+    // Keikkadata yksityiskohtien simulointiin
+    const GIGS_DATA = {
+      1: {
+        title: "Tapahtuma-avustaja Slush-esitilaisuuteen",
+        company: "Nordic Expo Oy",
+        companyDesc: "Tapahtumatuotannon edelläkävijä Suomessa.",
+        logo: "NX",
+        logoClass: "logo-red",
+        pay: "22 € / h",
+        duration: "5 tuntia",
+        location: "Haaga-Helia Pasila",
+        date: "Perjantai 18.10. klo 14-19",
+        desc: "Etsimme reipasta ja oma-aloitteista opiskelijaa avustamaan Slush-viikon esiseminaarissa. Tehtäviin kuuluu vieraiden vastaanotto, nimikorttien jako, puhujien opastaminen lavan taakse ja yleinen tilajärjestely. Perehdytys pidetään heti työvuoron alussa."
+      },
+      2: {
+        title: "Frontend-bugin korjaus React/CSS",
+        company: "FlowStack Software",
+        companyDesc: "Ketterä helsinkiläinen SaaS-startup.",
+        logo: "FS",
+        logoClass: "logo-blue",
+        pay: "25 € / h",
+        duration: "8 tuntia (etä)",
+        location: "Etätyö / Helsinki",
+        date: "Sovittavissa tällä viikolla",
+        desc: "Tarvitsemme nopeaa koodausapua verkkosovelluksemme responsiivisuuden fiksaukseen ja pieniin CSS grid -korjauksiin. Soveltuu täydellisesti opinnoissaan edistyneelle IT-opiskelijalle."
+      },
+      3: {
+        title: "Asiakaspalvelija opiskelijakahvilaan",
+        company: "KulmaCafe",
+        companyDesc: "Rento ja suosittu kampus-kahvila Vallilassa.",
+        logo: "KC",
+        logoClass: "logo-green",
+        pay: "16,50 € / h",
+        duration: "6 tuntia",
+        location: "Vallila Campus Hub",
+        date: "Lauantai klo 10-16",
+        desc: "Kahvilamme kaipaa reipasta lauantaituuraajaa kassalle ja tiskiin. Kokemus erikoiskahveista katsotaan eduksi, mutta iloinen asenne ratkaisee!"
+      },
+      4: {
+        title: "Promootiomyyjä viikonlopun messuille",
+        company: "BrandStars Agency",
+        companyDesc: "Valtakunnallinen promootio- ja tapahtumatoimisto.",
+        logo: "BS",
+        logoClass: "logo-purple",
+        pay: "21 € / h",
+        duration: "7 tuntia / päivä",
+        location: "Messukeskus, Helsinki",
+        date: "La-Su klo 09-16",
+        desc: "Tule esittelemään uutuustuotteita syksyn suurimmille messuille. Tarjoamme hyvän perehdytyksen, tiimiasun sekä kilpailukykyisen tuntipalkan ja bonukset!"
+      }
+    };
+
+    let currentSelectedGig = 1;
+    let earnedTotal = 320;
+
+    // Näkymän vaihto funktio
+    function navigateTo(targetPageId) {
+      // Piilota kaikki sivut
+      const pages = document.querySelectorAll('.page');
+      pages.forEach(p => p.classList.remove('active'));
+
+      // Näytä valittu sivu
+      const targetPage = document.getElementById(targetPageId);
+      if (targetPage) {
+        targetPage.classList.add('active');
+      }
+
+      // Päivitä alanavigaation aktiivisuus
+      updateNavHighlight(targetPageId);
+
+      // Skrollaa ylös
+      const viewport = document.querySelector('.viewport');
+      if (viewport) viewport.scrollTop = 0;
+    }
+
+    function updateNavHighlight(pageId) {
+      const navButtons = document.querySelectorAll('.nav-btn');
+      navButtons.forEach(btn => btn.classList.remove('active'));
+
+      if (pageId === 'view-home' || pageId === 'view-details') {
+        document.getElementById('nav-btn-home')?.classList.add('active');
+      } else if (pageId === 'view-my-gigs') {
+        document.getElementById('nav-btn-my-gigs')?.classList.add('active');
+      } else if (pageId === 'view-profile') {
+        document.getElementById('nav-btn-profile')?.classList.add('active');
+      }
+    }
+
+    // Avaa Keikan yksityiskohdat
+    function openGigDetails(gigId) {
+      const data = GIGS_DATA[gigId] || GIGS_DATA[1];
+      currentSelectedGig = gigId;
+
+      document.getElementById('details-title').innerText = data.title;
+      document.getElementById('details-company-name').innerText = data.company;
+      document.getElementById('details-company-desc').innerText = data.companyDesc;
+      document.getElementById('details-pay').innerText = data.pay;
+      document.getElementById('details-duration').innerText = data.duration;
+      document.getElementById('details-location').innerText = data.location;
+      document.getElementById('details-date').innerText = data.date;
+      document.getElementById('details-desc').innerText = data.desc;
+
+      const logoEl = document.getElementById('details-company-logo');
+      logoEl.className = 'company-logo ' + data.logoClass;
+      logoEl.innerText = data.logo;
+
+      navigateTo('view-details');
+    }
+
+    // Hae keikkaa CTA toiminto
+    function applyForGig() {
+      showToast('Hakemus lähetetty onnistuneesti!');
+      setTimeout(() => {
+        navigateTo('view-my-gigs');
+        // Aktivoi "Odottaa"-tab
+        const pendingTabBtn = document.querySelectorAll('.tab-item')[1];
+        if (pendingTabBtn) {
+          switchMyGigsTab(pendingTabBtn, 'tab-pending');
+        }
+      }, 700);
+    }
+
+    // Suodatin tagien valinta
+    function setFilter(chipElement, tag) {
+      document.querySelectorAll('.filter-chip').forEach(el => el.classList.remove('active'));
+      chipElement.classList.add('active');
+
+      const cards = document.querySelectorAll('.gig-card');
+      cards.forEach(card => {
+        if (tag === 'Kaikki') {
+          card.style.display = 'block';
+        } else {
+          const cardTags = card.getAttribute('data-tags') || '';
+          if (cardTags.includes(tag)) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+        }
+      });
+    }
+
+    // Tekstihaku
+    function filterGigsBySearch(query) {
+      const term = query.toLowerCase().trim();
+      const cards = document.querySelectorAll('.gig-card');
+      cards.forEach(card => {
+        const title = card.getAttribute('data-title').toLowerCase();
+        const text = card.innerText.toLowerCase();
+        if (title.includes(term) || text.includes(term)) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // Taitojen lisäys ja poisto
+    function addNewSkill() {
+      const input = document.getElementById('new-skill-input');
+      const val = input.value.trim();
+      if (!val) return;
+
+      const container = document.getElementById('skills-list');
+      const tag = document.createElement('span');
+      tag.className = 'skill-tag';
+      tag.innerHTML = `${val} <span class="remove-btn" onclick="removeSkill(this)">×</span>`;
+      container.appendChild(tag);
+
+      input.value = '';
+      showToast(`Taito "${val}" lisätty!`);
+    }
+
+    function removeSkill(btn) {
+      const tag = btn.parentElement;
+      tag.remove();
+    }
+
+    // Kalenterin päivien valinta
+    function toggleCalendarSlot(slot) {
+      slot.classList.toggle('available');
+      const small = slot.querySelector('small');
+      if (slot.classList.contains('available')) {
+        small.innerText = 'Vapaa';
+      } else {
+        small.innerText = 'Varattu';
+      }
+    }
+
+    // Profiilin tallennus
+    function saveProfile() {
+      showToast('Tiedot tallennettu onnistuneesti!');
+      setTimeout(() => {
+        navigateTo('view-home');
+      }, 800);
+    }
+
+    // Omat keikat tab-vaihto
+    function switchMyGigsTab(tabElement, contentId) {
+      document.querySelectorAll('.tab-item').forEach(el => el.classList.remove('active'));
+      tabElement.classList.add('active');
+
+      document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+      const target = document.getElementById(contentId);
+      if (target) {
+        target.style.display = 'block';
+      }
+    }
+
+    // Merkitse tehdyksi ja päivitä ansio
+    function markAsCompleted(cardId, amount) {
+      const card = document.getElementById(cardId);
+      if (card) {
+        card.style.transition = 'all 0.3s ease';
+        card.style.opacity = '0.5';
+        card.style.pointerEvents = 'none';
+        
+        earnedTotal += amount;
+        document.getElementById('earned-amount').innerText = earnedTotal + ' €';
+
+        showToast(`Keikka merkitty tehdyksi! +${amount} € lisätty ansioihin.`);
+        setTimeout(() => {
+          card.remove();
+        }, 1200);
+      }
+    }
+
+    // Toast viestit
+    let toastTimeout;
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      const text = document.getElementById('toast-text');
+      text.innerText = message;
+      toast.classList.add('show');
+
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2500);
+    }
+
+    // Chat Modal logiikka
+    function openChatModal(recipient) {
+      document.getElementById('modal-recipient').innerText = recipient || 'Viesti työnantajalle';
+      const modal = document.getElementById('chat-modal');
+      modal.classList.add('show');
+      setTimeout(() => {
+        document.getElementById('chat-input')?.focus();
+      }, 200);
+    }
+
+    function closeChatModal() {
+      const modal = document.getElementById('chat-modal');
+      modal.classList.remove('show');
+    }
+
+    function handleBackdropClick(e) {
+      if (e.target.id === 'chat-modal') {
+        closeChatModal();
+      }
+    }
+
+    function sendChatMessage() {
+      const input = document.getElementById('chat-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const stream = document.getElementById('chat-stream');
+      const myBubble = document.createElement('div');
+      myBubble.className = 'chat-bubble me';
+      myBubble.innerText = text;
+      stream.appendChild(myBubble);
+      input.value = '';
+      stream.scrollTop = stream.scrollHeight;
+
+      // Automaattinen simuloitu vastaus työnantajalta
+      setTimeout(() => {
+        const reply = document.createElement('div');
+        reply.className = 'chat-bubble them';
+        reply.innerText = "Kiitos viestistä! Asia on kunnossa, nähdään pian!";
+        stream.appendChild(reply);
+        stream.scrollTop = stream.scrollHeight;
+      }, 900);
+    }
+  </script>
+
+
+
+
+</body></html>
